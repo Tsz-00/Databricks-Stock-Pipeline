@@ -39,21 +39,25 @@ resources:
       name: yfinance
       catalog_name: ${var.catalog}
       comment: "Landing schema for yfinance data"
+      storage_root: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/yfinance/' 
       
     bronze:
       name: bronze
       catalog_name: ${var.catalog}
       comment: "Bronze schema for stock_streaming"
+      storage_root: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/bronze/' 
 
     silver:
       name: silver
       catalog_name: ${var.catalog}
       comment: "Silver schema for stock_streaming"
+      storage_root: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/silver/' 
 
     gold:
       name: gold
       catalog_name: ${var.catalog}
       comment: "Gold schema for stock_streaming"
+      storage_root: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/gold/'
 
   volumes:
     landing:
@@ -61,6 +65,8 @@ resources:
       catalog_name: ${var.catalog}
       schema_name: yfinance
       comment: "Raw yfinance landing zone"
+      volume_type: "EXTERNAL"
+      storage_location: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/yfinance/landing/'
 
 targets:
   dev:
