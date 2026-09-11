@@ -1,0 +1,22 @@
+resources:
+  jobs:
+    yfinance_landing_job:
+      name: yfinance_landing_job
+
+      tasks:
+        - task_key: land_yfinance_data
+          environment_key: yfinance_env
+          spark_python_task:
+            python_file: ../src/stock_streaming/landing/yfinance_landing_writer.py
+
+      environments:
+        - environment_key: yfinance_env
+          spec:
+            environment_version: "5"
+            dependencies:
+              - yfinance
+              - pyarrow
+
+      tags:
+        layer: landing
+        source: yfinance
