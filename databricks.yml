@@ -3,6 +3,7 @@
 bundle:
   name: stock_streaming
   uuid: c541e91c-1461-4abc-bb49-64711fc1eb1f
+  engine: direct
 
 include:
   - resources/*.yml
@@ -11,8 +12,55 @@ include:
 variables:
   catalog:
     description: The catalog to use
-  schema:
-    description: The schema to use
+
+resources:
+  external_locations:
+      stock_managed_location:
+        name: stock_managed_location
+        url: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/'
+        credential_name: db_dea_cred
+        comment: "Managed storage for stock_streaming project"
+        grants:
+          - principal: lamtszhong2014@gmail.com
+            privileges:
+              - CREATE_MANAGED_STORAGE
+              - CREATE_EXTERNAL_TABLE
+              - READ_FILES
+              - WRITE_FILES
+
+  catalogs:
+    stock_catalog:
+      name: ${var.catalog}
+      comment: "Catalog for stock_streaming"
+      storage_root: 'abfss://stock-streaming@dbdeastroage.dfs.core.windows.net/' 
+
+  schemas:
+    yfinance:
+      name: yfinance
+      catalog_name: ${var.catalog}
+      comment: "Landing schema for yfinance data"
+      
+    bronze:
+      name: bronze
+      catalog_name: ${var.catalog}
+      comment: "Bronze schema for stock_streaming"
+
+    silver:
+      name: silver
+      catalog_name: ${var.catalog}
+      comment: "Silver schema for stock_streaming"
+
+    gold:
+      name: gold
+      catalog_name: ${var.catalog}
+      comment: "Gold schema for stock_streaming"
+
+  volumes:
+    landing:
+      name: landing
+      catalog_name: ${var.catalog}
+      schema_name: yfinance
+      comment: "Raw yfinance landing zone"
 
 targets:
   dev:
@@ -25,8 +73,7 @@ targets:
     workspace:
       host: https://adb-7405619175947828.8.azuredatabricks.net
     variables:
-      catalog: stock_streaming
-      schema: ${workspace.current_user.short_name}
+      catalog: stock_dev
   prod:
     mode: production
     workspace:
@@ -34,8 +81,7 @@ targets:
       # We explicitly deploy to /Workspace/Users/lamtszhong2014@gmail.com to make sure we only have a single copy.
       root_path: /Workspace/Users/lamtszhong2014@gmail.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: stock_streaming
-      schema: prod
+      catalog: stock_prod
     permissions:
       - user_name: lamtszhong2014@gmail.com
         level: CAN_MANAGE
