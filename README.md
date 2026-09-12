@@ -1,4 +1,5 @@
 # stock_streaming
+This project aim to produce stock streaming ETL data pipeline by leveraging Databricks Declarative Automation Bundles, CI/CD and Spark Declarative Pipelines technique.
 
 ## Landing job:
 * Land data to volume `databricks bundle run yfinance_landing_job -t dev`
