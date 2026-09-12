@@ -1,0 +1,22 @@
+resources:
+  pipelines:
+    stock_streaming_pipeline:
+      name: stock_streaming_pipeline
+      catalog: ${var.catalog}
+      schema: bronze
+  
+      libraries:
+        - file:
+            path: ../src/stock_streaming_etl/transformations/stock_streaming.py
+
+      serverless: true
+      photon: true
+      channel: CURRENT
+      development: true
+
+      configuration:
+        landing_path: /Volumes/${var.catalog}/dev_lamtszhong2014_yfinance/landing/
+
+      tags:
+        project: stock_streaming
+        layer: medallion

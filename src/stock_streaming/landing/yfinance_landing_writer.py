@@ -3,13 +3,13 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 TICKERS = ["GOOG", "NVDA", "MSFT", "TSLA", "AMZN", "META", "AAPL"]
-VOLUME__PATH = Path("/Volumes/stock_dev/dev_lamtszhong2014_yfinance/landing/")
+VOLUME_PATH = Path("/Volumes/stock_dev/dev_lamtszhong2014_yfinance/landing/")
 
 def get_output_path() -> Path:
     now = datetime.now(timezone.utc)
     folder_name = now.strftime("%Y-%m-%d")
     filename = now.strftime("%Y%m%d_%H%M%S") + ".parquet"
-    return VOLUME__PATH / folder_name / filename
+    return VOLUME_PATH / folder_name / filename
 
 def fetch_and_land() -> None:
     df = (
